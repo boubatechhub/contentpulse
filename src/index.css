@@ -109,3 +109,17 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+/* src/index.css */
+@import "tailwindcss";
+
+/* @theme : on définit nos couleurs de marque → Tailwind génère les utilitaires
+   (bg-brand-500, text-brand-400, etc.). Thème sombre violet/bleu. */
+@theme {
+  --color-brand-400: #a78bfa;   /* violet clair */
+  --color-brand-500: #8b5cf6;   /* violet principal */
+  --color-brand-600: #7c3aed;   /* violet foncé (hover) */
+  --color-accent-500: #3b82f6;  /* bleu accent */
+  --color-ink: #0a0e1a;         /* fond très sombre */
+  --color-surface: #131a2b;     /* cartes */
+  --color-line: #1e293b;        /* bordures discrètes */
+}

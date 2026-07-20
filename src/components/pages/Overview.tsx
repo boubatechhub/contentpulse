@@ -1,25 +1,30 @@
-// src/components/pages/Overview.tsx — MODIFIÉ (useStats via query)
+// src/components/pages/Overview.tsx — filtrage mémoïsé
+import { useMemo } from "react";
 import { Link } from "react-router";
-import { useDashboard } from "../../context/DashboardContext";
 import { useStats } from "../../hooks/useStats";
+import { useDashboard } from "../../stores/dashboardStore";
+import StatCard from "../StatCard";
 
 function Overview() {
-  const { state } = useDashboard();
-  const { data, isPending, isError, error } = useStats(state.periode);
+  const { data, isPending, isError, error } = useStats();
+  const recherche = useDashboard((s) => s.recherche);
+
+  // Filtrage mémoïsé (utile si la liste grandit).
+  const filtrees = useMemo(() => {
+    if (!data) return [];
+    return data.filter((s) =>
+      s.titre.toLowerCase().includes(recherche.toLowerCase()),
+    );
+  }, [data, recherche]);
 
   if (isPending) return <p>Chargement…</p>;
   if (isError) return <p className="error">{error.message}</p>;
 
-  const filtrees = data.filter((s) =>
-    s.titre.toLowerCase().includes(state.recherche.toLowerCase()),
-  );
-
   return (
     <div className="grid">
       {filtrees.map((s) => (
-        <Link key={s.id} to={`/stat/${s.id}`} className="stat-card">
-          <h3>{s.titre}</h3>
-          <strong>{s.valeur.toLocaleString("fr-FR")}</strong>
+        <Link key={s.id} to={`/stat/${s.id}`}>
+          <StatCard titre={s.titre} valeur={s.valeur} variation={s.variation} />
         </Link>
       ))}
     </div>

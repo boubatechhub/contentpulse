@@ -1,23 +1,21 @@
-// src/components/PeriodFilter.tsx
+// src/components/PeriodFilter.tsx — MODIFIÉ
+import { useDashboard } from "../stores/dashboardStore";
 import type { Periode } from "../data/stats";
 
-// Props : la période active + une fonction pour la changer (lifting state up).
-type Props = {
-  periode: Periode;
-  onChange: (p: Periode) => void;
-};
+const PERIODES: Periode[] = [7, 30, 90];
 
-const PERIODES: Periode[] = [7, 30, 90]; // options disponibles
+function PeriodFilter() {
+  // Deux sélecteurs ciblés : ne re-rend pas quand "recherche" change.
+  const periode = useDashboard((s) => s.periode);
+  const setPeriode = useDashboard((s) => s.setPeriode);
 
-function PeriodFilter({ periode, onChange }: Props) {
   return (
     <div className="period-filter">
       {PERIODES.map((p) => (
         <button
           key={p}
-          // bouton "actif" si c'est la période courante (classe conditionnelle)
           className={p === periode ? "actif" : ""}
-          onClick={() => onChange(p)} // remonte le choix au parent
+          onClick={() => setPeriode(p)}
         >
           {p} jours
         </button>
@@ -25,5 +23,4 @@ function PeriodFilter({ periode, onChange }: Props) {
     </div>
   );
 }
-
 export default PeriodFilter;

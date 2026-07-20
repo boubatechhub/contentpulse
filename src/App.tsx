@@ -1,34 +1,37 @@
-// src/App.tsx
+// src/App.tsx — code splitting par route
+import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router";
-import { DashboardProvider } from "./context/DashboardContext";
+import { AuthProvider } from "./context/AuthContext";
 import Layout from "./components/Layout";
 import RoutePrivee from "./components/RoutePrivee";
+import Loader from "./components/Loader";
+
+// Overview reste "eager" (page d'accueil, chargée tout de suite).
 import Overview from "./components/pages/Overview";
-import StatDetail from "./components/pages/StatDetail";
-import Login from "./components/pages/Login";
-import { Settings } from "./components/pages/Settings";
-import { NotFound } from "./components/pages/NotFound";
-import { AuthProvider } from "./context/AuthContext";
+
+// Les autres pages sont chargées À LA DEMANDE (chunks séparés) :
+const StatDetail = lazy(() => import("./components/pages/StatDetail"));
+const Login = lazy(() => import("./components/pages/Login"));
+const Settings = lazy(() =>
+  import("./components/pages/Settings").then((m) => ({ default: m.Settings })),
+);
 
 function App() {
   return (
-    // On enveloppe l'app par les deux providers (auth + état dashboard).
     <AuthProvider>
-      <DashboardProvider>
+      {/* Suspense : fallback pendant le téléchargement d'un chunk de page */}
+      <Suspense fallback={<Loader />}>
         <Routes>
           <Route element={<Layout />}>
-            <Route index element={<Overview />} /> {/* "/" */}
-            <Route path="stat/:id" element={<StatDetail />} />{" "}
-            {/* "/stat/xxx" */}
+            <Route index element={<Overview />} />
+            <Route path="stat/:id" element={<StatDetail />} />
             <Route path="login" element={<Login />} />
-            {/* Bloc protégé : il faut être connecté */}
             <Route element={<RoutePrivee />}>
               <Route path="reglages" element={<Settings />} />
             </Route>
-            <Route path="*" element={<NotFound />} /> {/* 404, en dernier */}
           </Route>
         </Routes>
-      </DashboardProvider>
+      </Suspense>
     </AuthProvider>
   );
 }

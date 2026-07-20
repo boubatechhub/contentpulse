@@ -1,13 +1,12 @@
-// src/hooks/useStats.ts — RÉÉCRIT avec TanStack Query
+// src/hooks/useStats.ts — MODIFIÉ (lit le store au lieu du Context)
 import { useQuery } from "@tanstack/react-query";
 import { fetchStats } from "../api/stats";
-import type { Periode } from "../data/stats";
+import { useDashboard } from "../stores/dashboardStore";
 
-// Beaucoup plus court que la version useEffect du Ch.5 :
-// plus de useState/loading/error/anti-race à la main → tout est géré.
-export function useStats(periode: Periode) {
+export function useStats() {
+  const periode = useDashboard((s) => s.periode); // sélecteur ciblé (client state)
   return useQuery({
-    queryKey: ["stats", periode], // cache PAR période
+    queryKey: ["stats", periode],                 // server state (TanStack Query)
     queryFn: () => fetchStats(periode),
   });
 }

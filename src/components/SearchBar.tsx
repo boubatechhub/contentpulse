@@ -1,19 +1,14 @@
-// src/components/SearchBar.tsx
-import { useEffect, useRef } from "react";
-import { useDashboard } from "../context/DashboardContext";
+// src/components/SearchBar.tsx — MODIFIÉ
+import { useDashboard } from "../stores/dashboardStore";
 
 function SearchBar() {
-  const { state, dispatch } = useDashboard();
-  const ref = useRef<HTMLInputElement>(null);
-
-  useEffect(() => { ref.current?.focus(); }, []); // focus au montage
-
+  const recherche = useDashboard((s) => s.recherche);
+  const setRecherche = useDashboard((s) => s.setRecherche);
   return (
     <input
-      ref={ref}
       className="search"
-      value={state.recherche}
-      onChange={(e) => dispatch({ type: "CHERCHER", texte: e.target.value })}
+      value={recherche}
+      onChange={(e) => setRecherche(e.target.value)}
       placeholder="Filtrer une statistique…"
     />
   );
