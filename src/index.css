@@ -120,6 +120,13 @@ code {
   --color-brand-600: #7c3aed;   /* violet foncé (hover) */
   --color-accent-500: #3b82f6;  /* bleu accent */
   --color-ink: #0a0e1a;         /* fond très sombre */
-  --color-surface: #131a2b;     /* cartes */
-  --color-line: #1e293b;        /* bordures discrètes */
+  --color-surface: #131a2b;     /* cartes (sombre) */
+  --color-line: #1e293b;        /* bordures discrètes (sombre) */
+  --color-mint-50: #eaf6f2;     /* fond clair (thème clair) */
+
+  /* Statuts delta (bon/mauvais) — jamais réutilisés comme couleur de série. */
+  --color-good-light: #006300;
+  --color-good-dark: #0ca30c;
+  --color-bad-light: #d03b3b;
+  --color-bad-dark: #e66767;
 }

@@ -7,7 +7,7 @@ type UIStore = { theme: "clair" | "sombre"; basculerTheme: () => void };
 export const useUI = create<UIStore>()(
   persist(
     (set) => ({
-      theme: "sombre",
+      theme: "clair",
       basculerTheme: () =>
         set((s) => ({ theme: s.theme === "clair" ? "sombre" : "clair" })),
     }),

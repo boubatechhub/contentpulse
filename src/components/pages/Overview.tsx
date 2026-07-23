@@ -1,12 +1,15 @@
 // src/components/pages/Overview.tsx — filtrage mémoïsé
 import { useMemo } from "react";
-import { Link } from "react-router";
 import { useStats } from "../../hooks/useStats";
 import { useDashboard } from "../../stores/dashboardStore";
-import StatCard from "../StatCard";
+import PeriodFilter from "../PeriodFilter";
+import SearchBar from "../SearchBar";
+import StatsGrid from "../StatsGrid";
+import ErrorMessage from "../ErrorMessage";
+import Loader from "../Loader";
 
 function Overview() {
-  const { data, isPending, isError, error } = useStats();
+  const { data, isPending, isError, error, refetch } = useStats();
   const recherche = useDashboard((s) => s.recherche);
 
   // Filtrage mémoïsé (utile si la liste grandit).
@@ -17,16 +20,19 @@ function Overview() {
     );
   }, [data, recherche]);
 
-  if (isPending) return <p>Chargement…</p>;
-  if (isError) return <p className="error">{error.message}</p>;
-
   return (
-    <div className="grid">
-      {filtrees.map((s) => (
-        <Link key={s.id} to={`/stat/${s.id}`}>
-          <StatCard titre={s.titre} valeur={s.valeur} variation={s.variation} />
-        </Link>
-      ))}
+    <div className="space-y-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <PeriodFilter />
+        <SearchBar />
+      </div>
+      {isPending ? (
+        <Loader />
+      ) : isError ? (
+        <ErrorMessage message={error.message} onRetry={refetch} />
+      ) : (
+        <StatsGrid stats={filtrees} />
+      )}
     </div>
   );
 }

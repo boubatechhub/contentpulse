@@ -15,6 +15,9 @@ const Login = lazy(() => import("./components/pages/Login"));
 const Settings = lazy(() =>
   import("./components/pages/Settings").then((m) => ({ default: m.Settings })),
 );
+const NotFound = lazy(() =>
+  import("./components/pages/NotFound").then((m) => ({ default: m.NotFound })),
+);
 
 function App() {
   return (
@@ -29,6 +32,7 @@ function App() {
             <Route element={<RoutePrivee />}>
               <Route path="reglages" element={<Settings />} />
             </Route>
+            <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
       </Suspense>
